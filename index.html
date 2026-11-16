@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rejestry i VAT</title>
+<meta name="description" content="Rejestr VAT sprzedaży i zakupów — prototyp interfejsu (dane demonstracyjne).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="only">
+<header class="topbar">
+  <div class="topbar-in">
+    <p class="greet">Witaj, Preview Reviewer!</p>
+    <div class="top-actions">
+      <div class="menu-wrap">
+        <button class="icon-btn round" id="bellBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Powiadomienia"><span class="i" data-i="bell"></span><span class="dot" id="bellDot">4</span></button>
+        <div class="menu wide" id="bellMenu" hidden>
+          <div class="menu-head"><b>Powiadomienia</b><button type="button" class="chip-link" id="readAll">Oznacz jako przeczytane</button></div>
+          <ul class="notifs" id="notifs"></ul>
+        </div>
+      </div>
+      <span class="sep" aria-hidden="true"></span>
+      <div class="menu-wrap">
+        <button class="user" id="userBtn" type="button" aria-haspopup="menu" aria-expanded="false">
+          <span class="u-t"><b>Preview Reviewer</b><small>Konto użytkownika</small></span>
+          <span class="avatar"><span class="i" data-i="user"></span></span>
+          <span class="i chev" data-i="chev-down"></span>
+        </button>
+        <div class="menu" id="userMenu" role="menu" hidden>
+          <button role="menuitem" type="button" data-toast="Profil — poza zakresem prototypu"><span class="i" data-i="user"></span>Profil</button>
+          <button role="menuitem" type="button" data-toast="Ustawienia — poza zakresem prototypu"><span class="i" data-i="sliders"></span>Ustawienia</button>
+          <button role="menuitem" type="button" data-toast="Wylogowanie — poza zakresem prototypu"><span class="i" data-i="logout"></span>Wyloguj</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page" id="app">
+
+  <div class="pagehead">
+    <p class="org">Ewidencje</p>
+    <h1>Obszary księgowe</h1>
+    <p class="sub">Mapa dostępnych obszarów księgowych dla aktywnej organizacji.</p>
+  </div>
+
+  <div class="note" id="scopeNote" role="note">
+    <span class="i" data-i="info"></span>
+    <p>To jest mapa zakresu, a nie uruchomienie księgowania. Dane pozostają demonstracyjne.</p>
+    <button class="icon-btn sm ghost" id="scopeClose" type="button" aria-label="Ukryj informację"><span class="i" data-i="x"></span></button>
+  </div>
+
+  <div class="overview">
+    <details class="fold">
+      <summary>
+        <span class="tile"><span class="i" data-i="calendar"></span></span>
+        <span class="fold-t"><b>Okres księgowy · 2026</b></span>
+        <span class="badge warn">Wymaga konfiguracji</span>
+        <span class="i chev" data-i="chev-down"></span>
+      </summary>
+      <p class="fold-body">Orientacyjny rok rozliczeniowy aktywnej organizacji. Wymaga potwierdzenia przed uruchomieniem operacji księgowych.</p>
+    </details>
+
+    <details class="fold">
+      <summary>
+        <span class="fold-t"><b>Dostępność obszarów</b><small>6 obszarów · wymagają konfiguracji</small></span>
+        <span class="i chev" data-i="chev-down"></span>
+      </summary>
+      <div class="fold-body">
+        <p class="hint">Status pokazuje gotowość warunków, ale nie uruchamia księgowania ani operacji zewnętrznych.</p>
+        <div class="areas" id="areas"></div>
+      </div>
+    </details>
+  </div>
+
+  <nav class="areatabs" aria-label="Obszary">
+    <span class="areatabs-l">Obszary</span>
+    <div class="seg" role="tablist" id="areaTabs">
+      <button role="tab" type="button" data-area="vat" aria-selected="true"><span class="i" data-i="receipt"></span>Rejestry i VAT</button>
+      <button role="tab" type="button" data-area="book" aria-selected="false"><span class="i" data-i="bank"></span>Księgowania</button>
+      <button role="tab" type="button" data-area="assets" aria-selected="false"><span class="i" data-i="archive"></span>Majątek</button>
+      <button role="tab" type="button" data-area="checks" aria-selected="false"><span class="i" data-i="check"></span>Kontrole</button>
+    </div>
+  </nav>
+
+  <div class="card" id="area-other" hidden></div>
+
+  <div id="area-vat" class="card area-card">
+  <header class="head">
+    <div class="head-text">
+      <p class="org">Onsaldo Preview Sp. z o.o.</p>
+      <h2>Rejestry i VAT</h2>
+      <p class="sub">Sprzedaż i zakupy w wybranym okresie — podgląd danych demonstracyjnych.</p>
+    </div>
+    <div class="badges">
+      <button class="badge warn" id="ctxBtn" type="button" aria-expanded="false" aria-controls="ctxNote">Wymaga potwierdzenia <span class="i" data-i="info"></span></button>
+      <span class="badge">DEMO</span>
+    </div>
+  </header>
+
+  <div class="note" id="ctxNote" role="note" hidden>
+    <span class="i" data-i="info"></span>
+    <p>Kontekst VAT wymaga potwierdzenia. Poniżej wyłącznie dane demonstracyjne, nie ewidencja organizacji.</p>
+    <button class="icon-btn sm ghost" id="ctxClose" type="button" aria-label="Ukryj informację"><span class="i" data-i="x"></span></button>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Rejestry">
+    <button role="tab" id="tab-sales" data-tab="sales" aria-selected="true"><span class="i" data-i="receipt"></span>Rejestr VAT sprzedaży</button>
+    <button role="tab" id="tab-purchases" data-tab="purchases" aria-selected="false"><span class="i" data-i="wallet"></span>Rejestr VAT zakupów</button>
+  </div>
+
+  <section class="panel" aria-labelledby="tab-sales" id="panel">
+
+    <div class="demo-row">
+      <div class="demo-switch" role="group" aria-label="Stan demonstracyjny widoku">
+        <span>Stan widoku</span>
+        <button type="button" data-demo="filled" aria-pressed="true">Dane</button>
+        <button type="button" data-demo="empty" aria-pressed="false">Pusty</button>
+        <button type="button" data-demo="error" aria-pressed="false">Błąd</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <label class="search">
+        <span class="i" data-i="search"></span>
+        <input id="q" type="search" placeholder="Szukaj" autocomplete="off" aria-label="Szukaj w rejestrze">
+      </label>
+      <button class="btn" id="filtersBtn" type="button" aria-expanded="false" aria-controls="filters">
+        <span class="i" data-i="sliders"></span><span class="lbl">Filtry</span><span class="count" id="filtersCount" hidden>0</span>
+      </button>
+      <button class="btn" id="exportBtn" type="button"><span class="i" data-i="download"></span><span class="lbl">Eksport</span></button>
+      <div class="menu-wrap">
+        <button class="icon-btn" id="moreBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Więcej działań"><span class="i" data-i="more"></span></button>
+        <div class="menu" id="moreMenu" role="menu" hidden>
+          <button role="menuitem" type="button" data-act="labels"><span class="i" data-i="tag"></span>Etykiety</button>
+          <button role="menuitem" type="button" data-act="print"><span class="i" data-i="printer"></span>Drukuj</button>
+          <button role="menuitem" type="button" data-act="columns"><span class="i" data-i="columns"></span>Widok tabeli</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filters" id="filters" hidden>
+      <div class="filters-grid">
+        <label class="field"><span>Rok</span><select id="fYear"></select></label>
+        <label class="field"><span>Miesiąc</span><select id="fMonth"></select></label>
+        <label class="field"><span>Rodzaj operacji</span><select id="fOp"></select></label>
+        <label class="field"><span>Kod JPK V7</span><select id="fJpk"></select></label>
+      </div>
+      <div class="filters-actions">
+        <button class="btn" id="seriesBtn" type="button"><span class="i" data-i="sliders"></span>Serie dokumentów<span class="count" id="seriesCount" hidden>0</span></button>
+        <button class="icon-btn" id="resetBtn" type="button" aria-label="Wyczyść filtry" title="Wyczyść filtry"><span class="i" data-i="filter-x"></span></button>
+      </div>
+    </div>
+
+    <div class="chips" id="chips" aria-label="Aktywne filtry"></div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <details class="rates" id="rates">
+      <summary>
+        <span class="rates-title">Kwoty według stawek VAT <span class="tag">VAT · DEMO</span></span>
+        <span class="rates-preview" id="ratesPreview"></span>
+        <span class="i chev" data-i="chev-down"></span>
+      </summary>
+      <div class="rates-body" id="ratesBody"></div>
+    </details>
+
+    <div id="results" aria-live="polite"></div>
+
+  </section>
+  </div>
+</main>
+
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <form method="dialog" class="dlg-card">
+    <div class="dlg-head"><h2 id="dlgTitle"></h2><button class="icon-btn sm ghost" value="close" aria-label="Zamknij"><span class="i" data-i="x"></span></button></div>
+    <div class="dlg-body" id="dlgBody"></div>
+    <div class="dlg-foot" id="dlgFoot"></div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>
